@@ -4,35 +4,41 @@
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
     <style>
         body { margin: 0; background: #020202; color: white; font-family: 'Courier New', Courier, monospace; display: flex; height: 100vh; width: 100vw; overflow: hidden; flex-direction: row; }
-        #game-container { width: 50vw; height: 100vh; background: #000; border-right: 3px solid #ff6600; position: relative; }
-        #info-sidebar { width: 50vw; height: 100vh; padding: 30px; background: #050505; display: flex; flex-direction: column; box-sizing: border-box; overflow-y: auto; }
+        #game-container { width: 50vw; height: 100vh; background: #000; border-right: 3px solid #ff6600; position: relative; touch-action: none; }
+        #info-sidebar { width: 50vw; height: 100vh; padding: 25px; background: #050505; display: flex; flex-direction: column; box-sizing: border-box; overflow-y: auto; }
         
-        #mobile-controls { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: none; grid-template-columns: repeat(3, 70px); gap: 15px; z-index: 10; pointer-events: none; }
-        .ctrl-btn { width: 70px; height: 70px; background: rgba(255, 102, 0, 0.2); border: 2px solid #ff6600; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #ff6600; font-weight: bold; pointer-events: auto; user-select: none; font-size: 24px; }
+        /* Large Responsive D-Pad */
+        #mobile-controls { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: none; grid-template-columns: repeat(3, 80px); gap: 10px; z-index: 10; pointer-events: none; }
+        .ctrl-btn { width: 80px; height: 80px; background: rgba(255, 102, 0, 0.1); border: 2px solid #ff6600; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #ff6600; font-weight: bold; pointer-events: auto; user-select: none; font-size: 28px; -webkit-tap-highlight-color: transparent; }
+        .ctrl-btn:active { background: #ff6600; color: #000; }
+
+        /* Quick Nav Keys for Mobile */
+        .quick-nav { display: none; margin-top: 15px; gap: 5px; flex-wrap: wrap; }
+        .nav-key { background: #111; border: 1px solid #33ccff; color: #33ccff; padding: 8px 12px; font-size: 11px; cursor: pointer; border-radius: 4px; text-transform: uppercase; }
+
+        #overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.98); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; }
+        .menu-btn { background: #111; color: #ff6600; border: 2px solid #ff6600; padding: 20px; margin: 10px; cursor: pointer; font-size: 16px; width: 100%; max-width: 300px; text-transform: uppercase; }
         
-        #overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.98); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .menu-btn { background: #111; color: #ff6600; border: 2px solid #ff6600; padding: 25px; margin: 12px; cursor: pointer; font-size: 18px; width: 320px; text-transform: uppercase; }
-        .menu-btn:hover { background: #ff6600; color: #000; }
-        
-        h1 { color: #ff6600; margin: 0; font-size: 22px; border-bottom: 2px solid #ff6600; padding-bottom: 5px; }
-        .section-title { font-size: 16px; color: #33ccff; margin-top: 20px; text-transform: uppercase; border-left: 4px solid #33ccff; padding-left: 12px; }
-        #status-display { margin-top: 15px; font-weight: bold; padding: 12px; background: #111; border: 1px solid #333; color: #00ff00; font-size: 13px; }
-        .cursor { display: inline-block; width: 10px; height: 16px; background: #00ff00; animation: blink 0.8s infinite; vertical-align: middle; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        h1 { color: #ff6600; margin: 0; font-size: 20px; border-bottom: 2px solid #ff6600; padding-bottom: 5px; }
+        .section-title { font-size: 15px; color: #33ccff; margin-top: 20px; text-transform: uppercase; border-left: 4px solid #33ccff; padding-left: 10px; }
+        #status-display { margin-top: 15px; font-weight: bold; padding: 10px; background: #111; border: 1px solid #333; color: #00ff00; font-size: 12px; }
+        .content { font-size: 14px; line-height: 1.5; color: #ddd; margin-top: 10px; }
 
         @media (max-width: 900px) {
             body { flex-direction: column; }
-            #game-container, #info-sidebar { width: 100vw; height: 50vh; }
+            #game-container { width: 100vw; height: 45vh; border-right: none; border-bottom: 3px solid #ff6600; }
+            #info-sidebar { width: 100vw; height: 55vh; }
             #mobile-controls { display: grid; }
+            .quick-nav { display: flex; }
         }
     </style>
 </head>
 <body>
     <div id="overlay">
-        <h1 style="border:none; font-size: 32px;">KAZI MOHAMMED ARSH</h1>
-        <p style="color:#888">INITIALIZING NEON INTERFACE...</p>
-        <button class="menu-btn" onclick="startGame('playing')">PLAYING MODE</button>
-        <button class="menu-btn" onclick="startGame('reading')">READING MODE</button>
+        <h1 style="border:none; font-size: 28px;">KAZI MOHAMMED ARSH</h1>
+        <p style="color:#888; margin-bottom: 20px;">JUNIOR DATA ENGINEER</p>
+        <button class="menu-btn" onclick="startGame('playing')">START GAME MODE</button>
+        <button class="menu-btn" onclick="startGame('reading')">START READING MODE</button>
     </div>
 
     <div id="game-container">
@@ -45,17 +51,33 @@
     </div>
 
     <div id="info-sidebar">
-        <h1 id="side-title">KAZI MOHAMMED ARSH</h1>
+        <h1>KAZI MOHAMMED ARSH</h1>
         <div id="status-display">STATUS: <span id="mode-txt">IDLE</span> | SCORE: <span id="score-val">0</span></div>
+        
+        <div class="quick-nav">
+            <button class="nav-key" onclick="teleport('EDU')">Education</button>
+            <button class="nav-key" onclick="teleport('EXP')">Ather</button>
+            <button class="nav-key" onclick="teleport('TCS')">TCS</button>
+            <button class="nav-key" onclick="teleport('SKI')">Skills</button>
+        </div>
+
         <div class="section-title" id="node-title">SYSTEM</div>
-        <div id="side-body" class="content">Select protocol to decrypt professional data...</div>
+        <div id="side-body" class="content">Initialize protocol to view data...</div>
     </div>
 
 <script>
-let gameMode, gameStarted = false, score = 0, unlocked = false;
+let gameMode, gameStarted = false, score = 0;
 let mobileInputs = { up: false, down: false, left: false, right: false };
-let player, ghosts, cursors, hudText;
+let player, ghosts, hudText, cig, coin;
 let currentSpeed = 220, isHunter = false, speedTimer = 0, hunterTimer = 0, currentNode = "";
+
+function teleport(node) {
+    if(!gameStarted) return;
+    if(node === 'EDU') player.setPosition(300, 80);
+    if(node === 'EXP') player.setPosition(540, 200);
+    if(node === 'TCS') player.setPosition(540, 450);
+    if(node === 'SKI') player.setPosition(60, 450);
+}
 
 function startGame(mode) {
     gameMode = mode;
@@ -64,19 +86,18 @@ function startGame(mode) {
     gameStarted = true;
     
     const config = {
-        type: Phaser.AUTO,
-        parent: 'game-container',
-        width: 600, height: 600,
+        type: Phaser.AUTO, parent: 'game-container', width: 600, height: 600,
         scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-        physics: { default: 'arcade', arcade: { gravity: { y: 0 } } },
+        physics: { default: 'arcade' },
         scene: { preload: preload, create: create, update: update }
     };
     new Phaser.Game(config);
 
     const setupBtn = (id, key) => {
         const btn = document.getElementById(id);
-        btn.addEventListener('touchstart', (e) => { e.preventDefault(); mobileInputs[key] = true; });
-        btn.addEventListener('touchend', (e) => { e.preventDefault(); mobileInputs[key] = false; });
+        const set = (val) => (e) => { e.preventDefault(); mobileInputs[key] = val; };
+        btn.addEventListener('touchstart', set(true));
+        btn.addEventListener('touchend', set(false));
     };
     setupBtn('upBtn','up'); setupBtn('downBtn','down'); setupBtn('leftBtn','left'); setupBtn('rightBtn','right');
 }
@@ -89,13 +110,10 @@ function create() {
         walls.create(x, y, null).setDisplaySize(w, h).refreshBody();
         this.add.rectangle(x, y, w, h, 0x111111).setStrokeStyle(2, 0xff6600, 1);
     };
-    
-    // Create Maze
     b(300, 5, 600, 10); b(300, 595, 600, 10); b(5, 300, 10, 600); b(595, 300, 10, 600);
     b(120, 120, 20, 150); b(480, 120, 20, 150); b(120, 480, 20, 150); b(480, 480, 20, 150);
     b(300, 300, 15, 100);
 
-    // Powerups
     cig = this.add.container(200, 450);
     cig.add([this.add.rectangle(0, 0, 20, 6, 0xffffff), this.add.rectangle(10, 0, 4, 6, 0xff4400)]);
     this.physics.add.existing(cig);
@@ -103,7 +121,7 @@ function create() {
     coin = this.add.circle(400, 150, 12, 0xffff00);
     this.physics.add.existing(coin);
 
-    hudText = this.add.text(20, 560, '', { font: 'bold 16px Courier New', fill: '#00ff00' });
+    hudText = this.add.text(20, 565, '', { font: 'bold 16px Courier New', fill: '#00ff00' });
 
     player = this.add.container(60, 540);
     player.add([this.add.circle(0, 0, 15, 0xe0ac69), this.add.circle(-5, -5, 2, 0x0), this.add.circle(5, -5, 2, 0x0), this.add.arc(0, 5, 8, 0, 180, false, 0x0)]);
@@ -115,10 +133,8 @@ function create() {
         let g = this.add.container(100 + (i*200), 80);
         let skull = this.add.graphics();
         skull.fillStyle(0xffffff, 1);
-        skull.fillRoundedRect(-12, -12, 24, 20, 8);
-        skull.fillRect(-8, 5, 16, 8);
-        g.add(skull);
-        g.add([this.add.circle(-5, -2, 3, c), this.add.circle(5, -2, 3, c)]);
+        skull.fillRoundedRect(-12, -12, 24, 20, 8); skull.fillRect(-8, 5, 16, 8);
+        g.add(skull); g.add([this.add.circle(-5, -2, 3, c), this.add.circle(5, -2, 3, c)]);
         g.color = c; ghosts.add(g);
         g.body.setCircle(16, -16, -16).setCollideWorldBounds(true).setBounce(1,1);
         if(gameMode === 'reading') g.body.setVelocity(Phaser.Math.Between(-120, 120), Phaser.Math.Between(-120, 120));
@@ -131,12 +147,12 @@ function create() {
     this.physics.add.overlap(player, ghosts, (p, g) => {
         if (gameMode === 'playing') {
             if (isHunter) { g.setPosition(300, 80); score += 200; }
-            else { player.setPosition(60, 540); score = Math.max(0, score-100); typeContent("BREACH", "Resetting Node..."); }
+            else { player.setPosition(60, 540); score = Math.max(0, score-100); typeContent("ALARM", "Security Reset..."); }
             document.getElementById('score-val').innerText = score;
         }
     });
 
-    typeContent("SUMMARY", "Junior Data Engineer with strong Python, SQL, and backend experience. MSc AI Distinction graduate.");
+    typeContent("SUMMARY", "Junior Data Engineer | MSc AI (Distinction) graduate. Specialist in Python, SQL, and Backend systems.");
     cursors = this.input.keyboard.createCursorKeys();
 }
 
@@ -147,48 +163,42 @@ function typeContent(title, text) {
     if (gameMode === 'reading') { body.innerHTML = text; return; }
     body.innerHTML = ""; let i = 0;
     let t = setInterval(() => {
-        if (i < text.length) { body.innerHTML = text.substring(0, i+1) + '<span class="cursor"></span>'; i++; }
+        if (i < text.length) { body.innerHTML = text.substring(0, i+1); i++; }
         else clearInterval(t);
-    }, 10);
+    }, 12);
 }
 
 function update(time, delta) {
-    if(!gameStarted || !player.body) return;
-    
+    if(!gameStarted || !player || !player.body) return;
     player.body.setVelocity(0);
     if (cursors.left.isDown || mobileInputs.left) player.body.setVelocityX(-currentSpeed);
     else if (cursors.right.isDown || mobileInputs.right) player.body.setVelocityX(currentSpeed);
     if (cursors.up.isDown || mobileInputs.up) player.body.setVelocityY(-currentSpeed);
     else if (cursors.down.isDown || mobileInputs.down) player.body.setVelocityY(currentSpeed);
 
-    if (cig && cig.active && this.physics.overlap(player, cig)) { cig.destroy(); currentSpeed = 440; speedTimer = 15; score += 50; }
+    if (cig && cig.active && this.physics.overlap(player, cig)) { cig.destroy(); currentSpeed = 440; speedTimer = 15; }
     if (coin && coin.active && this.physics.overlap(player, coin)) { 
-        coin.destroy(); isHunter = true; hunterTimer = 10; score += 100;
+        coin.destroy(); isHunter = true; hunterTimer = 10;
         ghosts.children.iterate(g => g.list[1].setFillStyle(0xff0000));
     }
 
     if (speedTimer > 0) { speedTimer -= delta/1000; if(speedTimer <= 0) currentSpeed = 220; }
     if (hunterTimer > 0) { hunterTimer -= delta/1000; if(hunterTimer <= 0) { isHunter = false; ghosts.children.iterate(g => g.list[1].setFillStyle(g.color)); } }
     
-    let hud = "";
-    if(speedTimer > 0) hud += `BOOST: ${Math.ceil(speedTimer)}s `;
-    if(hunterTimer > 0) hud += `HUNTER: ${Math.ceil(hunterTimer)}s`;
-    if(hudText) hudText.setText(hud);
+    if(hudText) hudText.setText((speedTimer > 0 ? `SPD:${Math.ceil(speedTimer)} ` : "") + (hunterTimer > 0 ? `HNT:${Math.ceil(hunterTimer)}` : ""));
 
     ghosts.children.iterate(g => {
         if (gameMode === 'playing') {
-            if (!isHunter) this.physics.moveToObject(g, player, 110);
+            if (!isHunter) this.physics.moveToObject(g, player, 115);
             else this.physics.moveToObject(g, player, -80);
         }
     });
 
-    // Node Decryption Logic
-    if (player.y < 120) typeContent("EDUCATION", "MSc Artificial Intelligence - UEL\nPassed with Distinction\nModules: Deep Learning, NLP, AI Ethics.");
-    else if (player.x > 480 && player.y < 300) typeContent("EXPERIENCE: ATHER", "Backend Developer (Aug 23 - Sep 24)\nDeveloped Python/Node.js services and optimized SQL.");
-    else if (player.x > 480 && player.y > 300) typeContent("EXPERIENCE: TCS", "System Administrator (Sep 21 - Aug 23)\nManaged Enterprise IT servers and automated admin tasks.");
-    else if (player.x < 120 && player.y > 300) typeContent("CORE SKILLS", "Languages: Python, SQL, JS\nBackend: Flask, Node.js\nTools: Docker, Git, Linux.");
-    else if (player.x < 120 && player.y < 300) typeContent("CERTIFICATIONS", "Udemy: 100 Days of Code (Python)\nUdemy: Full Stack Web Development.");
-    else if (player.x > 250 && player.x < 350 && player.y < 350) typeContent("INTERESTS", "Registered Reptile Breeder\nLEGO Design & Rare Coin Collection.");
+    if (player.y < 150) typeContent("EDUCATION", "MSc Artificial Intelligence - UEL (Distinction)\nModules: Deep Learning, NLP, AI Ethics.");
+    else if (player.x > 450 && player.y < 300) typeContent("EXP: ATHER ENERGY", "Backend Developer\nPython/Node.js API Development & SQL Optimization.");
+    else if (player.x > 450 && player.y > 300) typeContent("EXP: TCS", "System Administrator\nServer Management & Enterprise IT Automation.");
+    else if (player.x < 150 && player.y > 300) typeContent("CORE SKILLS", "Python, SQL, JavaScript, Flask, Docker, Linux, Git.");
+    else if (player.x < 150 && player.y < 300) typeContent("OTHER", "Manager - Eyva Lounge, UK\nOperations & Staff Leadership.");
 }
 </script>
 </body>
